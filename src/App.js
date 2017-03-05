@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { Provider } from 'react-redux';
+import appStore from './store';
 import logo from './logo.svg';
 import './App.css';
-import User from './Components/User/User';
+import UserInfo from './Components/UserInfo/UserInfo';
 import Search from './Components/Search/Search';
 
 class App extends Component {
@@ -10,14 +12,14 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>GitHub user browser</h2>
+          <h2>GitHub user inspector</h2>
         </div>
-        <div>
-          <Search />
-        </div>
-        <div className="Drop-zone">
-          <User />
-        </div>
+        <Provider store={appStore}>
+          <div>
+            <Search />
+            <UserInfo />
+          </div>
+        </Provider>
       </div>
     );
   }

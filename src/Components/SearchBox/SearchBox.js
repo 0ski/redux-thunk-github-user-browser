@@ -1,37 +1,40 @@
 import React, { Component } from 'react';
 import { debounce } from 'lodash';
+import './SearchBox.css';
 
 /**
  * Presentation component
  */
 class SearchBox extends Component {
-  constructor(props) {
+  constructor(props = {}) {
     super(props);
+    this.state = {
+      name: this.props.name || '',
+    };
 
-    this.props.decouncedBy = this.props.decouncedBy || 500;
-  }
-
-  getInitialState() {
-    return {
-        query: this.props.query,
-      };
+    this.onChange = this.onChange.bind(this);
   }
 
   componentWillMount() {
+    const debouncedBy = this.props.debouncedBy || 500;
     this.debauncedHandler = debounce(() => {
-      this.props.searchHandler.apply(this, [this.state.query]);
-    }, this.props.decouncedBy);
+      this.props.searchHandler.apply(this, [this.state.name]);
+    }, debouncedBy);
   }
 
   onChange(event) {
-    this.setState({ query: event.target.value });
-    this.handleSearchDebounced();
+    this.setState({
+      name: event.target.value,
+    });
+    this.debauncedHandler();
   }
 
   render() {
     return (
-        <input type="search"
-               value={this.state.query}
+        <input placeholder="Username..."
+               className="main-search"
+               type="text"
+               value={this.state.name}
                onChange={this.onChange} />
     );
   }

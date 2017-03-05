@@ -1,31 +1,56 @@
-const USER_DATA = 'USER_DATA_OBTAINED';
-const USER_NAME = 'USER_NAME_CHANGED';
+const actions = {
+  USER_DATA: 'USER_DATA_OBTAINED',
+  USER_DATA_ERROR: 'USER_DATA_ERROR',
+  LOADING_USER_DATA: 'LOADING_USER_DATA',
+  CHECK_CACHE: 'CHECK_CACHE',
+};
 
 const userData = data => ({
-  type: USER_DATA,
+  type: actions.USER_DATA,
   user: data,
 });
 
-const userName = name => ({
-  type: USER_NAME,
-  user: name,
+const loadingUserData = data => ({
+  type: actions.LOADING_USER_DATA,
+  isLoading: data,
 });
 
-const getUserData = () =>
+const userDataError = data => ({
+  type: actions.USER_DATA_ERROR,
+  error: data,
+});
+
+const blankUser = () => ({
+  type: actions.USER_DATA,
+  name: '',
+});
+
+const getCachedUserData = login => ({
+  type: actions.CHECK_CACHE,
+  login,
+});
+
+const getUserData = (name = '') =>
   dispatch => {
-    fetch('https://api.github.com/users/0ski')
-      .then(res => res.json())
-      .then(res =>
-        dispatch(
-          userData(res)
-        )
-      );
+    dispatch(loadingUserData(true));
+    return fetch(`https://api.github.com/users/${name}`)
+      .then(res => {
+        dispatch(loadingUserData(false));
+        return res.json().then((jsonRes) => ({
+            data: jsonRes,
+            status: res.status,
+          })
+        );
+      })
+      .then(res => {
+        if (res.status !== 200) {
+          dispatch(userDataError(res.data));
+          return;
+        } else {
+          dispatch(userData(res.data));
+          return res;
+        }
+      });
   };
 
-// const changeUserName = () =>
-//   dispatch =>
-//     name => dispatch(userName(name));
-
-const changeUserName = userName;
-
-export { USER_DATA, USER_NAME, getUserData, changeUserName };
+export { actions, getUserData, userData, getCachedUserData, blankUser };
