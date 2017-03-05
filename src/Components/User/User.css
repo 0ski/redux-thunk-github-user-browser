@@ -1,4 +1,33 @@
 .user {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.user .follow-list {
+  width: 50%;
+}
+
+.user .json {
+  width: 100%;
+}
+
+.user header {
+  width: 50%;
+  margin: 10px 25%;
+  display: flex;
+  align-content: space-around;
+}
+
+.user header h3 {
+  flex-grow: 1;
+}
+
+.user header div {
+  flex-grow: 1;
+}
+
+.user pre {
   width: 50%;
   text-align: left;
   margin: 0 auto;

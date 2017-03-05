@@ -3,6 +3,10 @@ const actions = {
   USER_DATA_ERROR: 'USER_DATA_ERROR',
   LOADING_USER_DATA: 'LOADING_USER_DATA',
   CHECK_CACHE: 'CHECK_CACHE',
+  FOLLOWERS: 'FOLLOWERS',
+  FOLLOWING: 'FOLLOWING',
+  L_FOLLOWERS: 'LOADING_FOLLOWERS',
+  L_FOLLOWING: 'LOADING_FOLLOWING',
 };
 
 const userData = data => ({
@@ -30,6 +34,60 @@ const getCachedUserData = login => ({
   login,
 });
 
+const loadingFollowers = bool => ({
+  type: actions.L_FOLLOWERS,
+  loadingFollowers: bool,
+});
+
+const loadingFollowing = bool => ({
+  type: actions.L_FOLLOWING,
+  loadingFollowing: bool,
+});
+
+const assignFollowers = followers => ({
+  type: actions.FOLLOWERS,
+  followers,
+});
+
+const assignFollowing = following => ({
+  type: actions.FOLLOWING,
+  following,
+});
+
+const followers = (name = '') =>
+  dispatch => {
+    dispatch(loadingFollowers(true));
+    return fetch(`https://api.github.com/users/${name}/followers`)
+      .then(res => {
+        dispatch(loadingFollowers(false));
+        return res.json();
+      })
+      .then(res => {
+        if (Array.isArray(res)) {
+          dispatch(assignFollowers(res));
+        } else {
+          dispatch(assignFollowers(null));
+        }
+      });
+  };
+
+const following = (name = '') =>
+  dispatch => {
+    dispatch(loadingFollowing(true));
+    return fetch(`https://api.github.com/users/${name}/following`)
+      .then(res => {
+        dispatch(loadingFollowing(false));
+        return res.json();
+      })
+      .then(res => {
+        if (Array.isArray(res)) {
+          dispatch(assignFollowing(res));
+        } else {
+          dispatch(assignFollowing(null));
+        }
+      });
+  };
+
 const getUserData = (name = '') =>
   dispatch => {
     dispatch(loadingUserData(true));
@@ -53,4 +111,4 @@ const getUserData = (name = '') =>
       });
   };
 
-export { actions, getUserData, userData, getCachedUserData, blankUser };
+export { actions, getUserData, userData, getCachedUserData, blankUser, followers, following };

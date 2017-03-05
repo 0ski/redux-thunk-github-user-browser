@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './User.css';
+import Followers from './../FollowList/Followers';
+import Following from './../FollowList/Following';
 
 class User extends Component {
   render() {
@@ -19,18 +21,24 @@ class User extends Component {
       );
     } else {
       return (
-        <div>
-          <h3>{ user.login }</h3>
-        <img role="presentation" width="64" height="64" src={ user.avatar_url } />
-          <div>
+        <div className="user">
+          <header>
+            <h3>{ user.login }</h3>
+            <div>
+              <img role="presentation" width="64" height="64" src={ user.avatar_url } />
+            </div>
+          </header>
+          <div className="follow-list">
             <h4>Followers:</h4>
+            <Followers />
           </div>
-          <div>
+          <div className="follow-list">
             <h4>Following:</h4>
+            <Following />
           </div>
-          <div>
+          <div className="json">
             <h4>JSON:</h4>
-            <pre className="user">{ JSON.stringify(user, null, 2) }</pre>
+            <pre>{ JSON.stringify(user, null, 2) }</pre>
           </div>
         </div>
       );

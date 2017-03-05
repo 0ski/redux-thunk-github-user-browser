@@ -45,6 +45,38 @@ const userReducer = (state = {}, action) => {
       newState.user = Object.assign({}, user);
 
       break;
+    case actions.L_FOLLOWERS:
+      newState.user.isLoadingFollowers = action.loadingFollowers;
+      break;
+    case actions.L_FOLLOWING:
+      newState.user.isLoadingFollowing = action.loadingFollowing;
+      break;
+    case actions.FOLLOWERS:
+      newState.user.followers = action;
+      if (Array.isArray(action)) {
+        newState.users.map(user => {
+          if (user.login.toLowerCase() === newState.user.login.toLowerCase()) {
+            return Object.assign({}, newState.user);
+          } else {
+            return user;
+          }
+        });
+      }
+
+      break;
+    case actions.FOLLOWING:
+      newState.user.following = action;
+      if (Array.isArray(action)) {
+        newState.users.map(user => {
+          if (user.login.toLowerCase() === newState.user.login.toLowerCase()) {
+            return Object.assign({}, newState.user);
+          } else {
+            return user;
+          }
+        });
+      }
+
+      break;
     default:
       break;
   }
